@@ -36,7 +36,7 @@ def make_text(chains, max_length):
     """Takes a dictionary of markov chains and returns random text
     based off an original text."""
     
-    # grab a random key from the chains dict, this is a tuple. Could be last set of words in the text??? Doesn't seem right.
+    # grab a random key from the chains dict, this is a tuple. Could be the last key added to the dictionary, which would end the random_text_list before it reach the specified max_length
     seed = random.choice(chains.keys())
 
     # convert the tuple into a list and add it to the list random_text_list
@@ -45,7 +45,7 @@ def make_text(chains, max_length):
 
     # while the random_text_list is not yet the max length specified...
     while len(random_text_list) < max_length:
-        # to deal with if the key chosen is the last set
+        # to deal with if the key chosen is the last set, because then the value would be the last word in the text and likely can't be used to make a new key. If attempted new key is the last two words & has no value, choose a random new key to restart instead.
         choices = None
         while not choices:
             choices = chains.get(seed)
