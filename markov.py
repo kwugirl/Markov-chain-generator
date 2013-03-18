@@ -1,7 +1,13 @@
 #!/usr/bin/env python
-
 import sys
 import random
+import twitter
+
+
+mytwitteraccount = twitter.Api(consumer_key="hhMMCNyExowTD1aIuthDAQ", 
+                                consumer_secret="8Wrjm9QGsgl7yeu1WzeE5MvDwTuHPsBgKSHjok9oM", 
+                                access_token_key="1278575833-6po7q7qgb1qM6QJpM2ptTVhDBfwkUCqqSFJvOgR", 
+                                access_token_secret="mA6Nzv6Jeun6SmbfY31QkP9e9AyYDdCuCn4Gd8rFBU")
 
 def make_chains(corpus, ngram_size):
     """Takes an input text as a string and returns a dictionary of
@@ -43,8 +49,10 @@ def make_text(chains, max_length):
     random_text_list = []
     random_text_list += list(seed)
 
+    text_string = ' '.join(random_text_list)
+
     # while the random_text_list is not yet the max length specified...
-    while len(random_text_list) < max_length:
+    while len(text_string) < max_length: 
         # to deal with if the key chosen is the last set, because then the value would be the last word in the text and likely can't be used to make a new key. If attempted new key is the last two words & has no value, choose a random new key to restart instead.
         choices = None
         while not choices:
@@ -60,9 +68,19 @@ def make_text(chains, max_length):
         # set new seed key based on previous seed, starting from the 2nd item to the end of the previous seed, and tack on the just added next word as part of the tuple
         seed = seed[1:] + (next,)
 
-    final_string = ' '.join(random_text_list)
+        text_string = ' '.join(random_text_list)
+        # print "length of text_string in while loop", len(text_string)
 
-    return final_string
+    # this is to strip off the last few words (usually just the last word, but might be last few words in the txt file if the last key added was the choices key)
+    while len(text_string) > max_length:
+        last_word = random_text_list.pop()
+        text_string = text_string.rstrip(last_word)
+        text_string = text_string.rstrip(" ")
+        # print "inside the stripping while loop"
+    
+    print "length of final text_string is", len(text_string)
+
+    return text_string
 
 def main():
     script, filename, ngram_size, max_length = sys.argv
@@ -73,6 +91,9 @@ def main():
     chain_dict = make_chains(input_text, int(ngram_size))
     random_text = make_text(chain_dict, int(max_length))
     print random_text
+
+    # posts to Twitter account
+    #status = mytwitteraccount.PostUpdates(random_text)
 
 if __name__ == "__main__":
     main()
