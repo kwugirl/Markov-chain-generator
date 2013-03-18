@@ -3,7 +3,8 @@ import sys
 import random
 import twitter
 
-
+# authentication for KWuDee twitter account, KWuDee as app developer token
+# used this tutorial for installing a Twitter module http://thysmichels.com/2012/02/06/twitter-python-api-tutorial/
 mytwitteraccount = twitter.Api(consumer_key="hhMMCNyExowTD1aIuthDAQ", 
                                 consumer_secret="8Wrjm9QGsgl7yeu1WzeE5MvDwTuHPsBgKSHjok9oM", 
                                 access_token_key="1278575833-6po7q7qgb1qM6QJpM2ptTVhDBfwkUCqqSFJvOgR", 
@@ -93,7 +94,7 @@ def main():
     print random_text
 
     # posts to Twitter account
-    #status = mytwitteraccount.PostUpdates(random_text)
+    status = mytwitteraccount.PostUpdates(random_text)
 
 if __name__ == "__main__":
     main()
