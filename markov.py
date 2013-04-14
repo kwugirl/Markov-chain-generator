@@ -1,28 +1,28 @@
 #!/usr/bin/env python
 import sys
 import random
-import twitter
+import twitter # using python-twitter package from https://github.com/bear/python-twitter, tutorial at http://thysmichels.com/2012/02/06/twitter-python-api-tutorial/
 
 # authentication for KWuDee twitter account, KWuDee as app developer token
 # used this tutorial for installing a Twitter module http://thysmichels.com/2012/02/06/twitter-python-api-tutorial/
-mytwitteraccount = twitter.Api(consumer_key="hhMMCNyExowTD1aIuthDAQ", 
-                                consumer_secret="8Wrjm9QGsgl7yeu1WzeE5MvDwTuHPsBgKSHjok9oM", 
-                                access_token_key="1278575833-6po7q7qgb1qM6QJpM2ptTVhDBfwkUCqqSFJvOgR", 
-                                access_token_secret="mA6Nzv6Jeun6SmbfY31QkP9e9AyYDdCuCn4Gd8rFBU")
+mytwitteraccount = twitter.Api(consumer_key="DTNHF01MhDu2O1uZm8rMVw",
+                                consumer_secret="sCz2SwQyjlFEBb3a9PQuOJ4iFwjW5szZ2K6Rb5eCU",
+                                access_token_key="1282499688-sGU7swFdKwl9DGgOFUlGhFhrZ2HDPvbWGB5J5td",
+                                access_token_secret="0d9Wu40tgcuJemTfqbMuI53mIIworLDb4PYd9DJYGek")
 
 def make_chains(corpus, ngram_size):
     """Takes an input text as a string and returns a dictionary of
-    markov chains."""    
+    markov chains."""
 
     # To do: strip out cruft later
 
     # break up input string of text into a list of individual words
-    word_list = corpus.split() 
+    word_list = corpus.split()
 
     # this is the first ngram that will become a key in the dictionary.
     # getting a slice of the word_list from the beg of the list, with the max size passed into this func at ngram_size; converted to a tuple for use as a key in the dict
     n_gram = tuple(word_list[:ngram_size])
-    
+
     # delete set of words being used as the first key (n_gram)
     del word_list[:ngram_size]
 
@@ -42,7 +42,7 @@ def make_chains(corpus, ngram_size):
 def make_text(chains, max_length):
     """Takes a dictionary of markov chains and returns random text
     based off an original text."""
-    
+
     # grab a random key from the chains dict, this is a tuple. Could be the last key added to the dictionary, which would end the random_text_list before it reach the specified max_length
     seed = random.choice(chains.keys())
 
@@ -53,7 +53,7 @@ def make_text(chains, max_length):
     text_string = ' '.join(random_text_list)
 
     # while the random_text_list is not yet the max length specified...
-    while len(text_string) < max_length: 
+    while len(text_string) < max_length:
         # to deal with if the key chosen is the last set, because then the value would be the last word in the text and likely can't be used to make a new key. If attempted new key is the last two words & has no value, choose a random new key to restart instead.
         choices = None
         while not choices:
@@ -78,15 +78,20 @@ def make_text(chains, max_length):
         text_string = text_string.rstrip(last_word)
         text_string = text_string.rstrip(" ")
         # print "inside the stripping while loop"
-    
+
     print "length of final text_string is", len(text_string)
 
     return text_string
 
 def main():
     script, filename, ngram_size, max_length = sys.argv
-
     # args is a tuple of what's inputted in terminal after python command, therefore can get filename using args[1]
+
+    # alternate way of getting input from user that makes it a bit more clear what's what, but more annoying to re-run multiple times from the terminal
+    # filename = raw_input("What is the input file? > ")
+    # ngram_size = raw_input("What size ngram do you want to use? > ")
+    # max_length = raw_input("What's the max number of characters you want to output? > ")
+
     input_text = open(filename).read()
 
     chain_dict = make_chains(input_text, int(ngram_size))
